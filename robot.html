@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>伟明环保 - 机器人对话</title>
+  <style>
+    html,body{margin:0;height:100%}
+    iframe{width:100%;height:100%;border:none}
+  </style>
+</head>
+<body>
+  <iframe id="chatFrame"></iframe>
+  <script>
+    const map = {
+      visit : "http://10.99.101.188/chat/share?shared_id=f1143c1273ff11f0baa96240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1",
+      rules  : "http://10.99.101.188/chat/share?shared_id=bc49566273fe11f0b6956240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1",
+      reception : "http://10.99.101.188/chat/share?shared_id=55601fe2740011f093f86240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1",
+      strong : "http://10.99.101.188/chat/share?shared_id=5254d73873fc11f0b1c56240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1"
+    };
+    const params = new URLSearchParams(location.search);
+    const botKey = params.get("bot");
+    const url = map[botKey];
+    if(url){
+      document.getElementById("chatFrame").src = url;
+      document.title = "伟明环保 - " + (botKey==="visit"?"接待":botKey==="rules"?"规章制度问答":botKey==="strong"?"强大":"自由聊天") + "机器人";
+    }else{
+      alert("参数错误，将返回选择页");
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

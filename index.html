@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>伟明环保 - 选择机器人</title>
+  <style>
+    body{font-family:"Microsoft YaHei",sans-serif;text-align:center;background:#f5f7fa;margin:0;padding:40px}
+    h1{margin-bottom:40px;color:#333}
+    .cards{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+    .card{
+      width:260px;padding:20px;border-radius:10px;
+      background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);
+      cursor:pointer;transition:transform .2s
+    }
+    .card:hover{transform:translateY(-6px)}
+    .card h2{margin:10px 0 6px;font-size:22px;color:#0076ff}
+    .card p{color:#666;font-size:14px}
+  </style>
+</head>
+<body>
+  <h1>请选择要使用的机器人</h1>
+
+  <div class="cards">
+      <div class="card" onclick="go('visit')">
+          <h2>接待机器人</h2>
+          <p>提供厂区参观讲解与问答服务</p>
+      </div>
+      <div class="card" onclick="go('rules')">
+          <h2>规章制度问答机器人</h2>
+          <p>处理出差和公出申请、报销、政策咨询</p>
+      </div>
+      <div class="card" onclick="go('reception')">
+          <h2>自由聊天机器人</h2>
+          <p>可以跟你聊公司的简介，发展历程</p>
+      </div>
+      <div class="card" onclick="go('strong')">
+          <h2>test</h2>
+          <p>勿动</p>
+      </div>
+  </div>
+  <script>
+    const map = {
+      visit : "http://10.99.101.188/chat/share?shared_id=ef41852673ef11f08a166240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1",
+      rules  : "http://10.99.101.188/chat/share?shared_id=632bcfda732f11f0b5626240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1",
+      reception : "http://10.99.101.188/chat/share?shared_id=1ceb04a0729411f0a9436240c33c263d&from=chat&auth=I1YjA5NmNlNzNlYjExZjA5YTllNjI0MG&visible_avatar=1"
+    };
+    function go(key){
+      location.href = "robot.html?bot=" + encodeURIComponent(key);
+    }
+  </script>
+
+  <!-- ===== 更新日志 ===== -->
+<section style="margin:60px auto 40px;max-width:600px;text-align:left">
+  <h2 style="text-align:center;color:#333">测试阶段 更新日志</h2>
+  <ul style="list-style:none;padding:0">
+    <li style="margin-bottom:10px">
+      <strong>2025-08-08</strong>：规章制度机器人更新了出差和公出的数据库，能实现基本的功能，但仍需大量测试。优化界面样式，支持响应式布局。其他几个机器人的数据未清洗，效果欠佳
+    </li>
+
+
+  </ul>
+  <p style="text-align:center;font-size:14px;color:#999">
+    较大版本改动都会记录在这里
+  </p>
+</section>
+
+<!-- ===== 简易评论区 ===== -->
+<section id="commentBox" style="margin:60px auto;max-width:600px">
+  <h2>留言板</h2>
+
+  <form id="cmtForm" onsubmit="return false">
+    <input  id="cmtName" placeholder="昵称" required style="width:30%;padding:6px">
+    <textarea id="cmtText" placeholder="说点什么…" required rows="3"
+              style="width:100%;margin-top:6px;padding:6px"></textarea>
+    <button onclick="addCmt()">提交</button>
+    <button onclick="exportCmt()">导出 JSON</button>
+  </form>
+
+  <ul id="cmtList" style="list-style:none;padding:0;margin-top:20px"></ul>
+</section>
+
+<script>
+/* ---------- 读写 localStorage ---------- */
+const LS_KEY = 'weiming_comments';
+
+function loadCmts() {
+  let arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+  const ul = document.getElementById('cmtList');
+  ul.innerHTML = '';
+  arr.forEach(c => {
+    const li = document.createElement('li');
+    li.style.cssText = 'background:#fff;padding:8px 12px;margin-bottom:8px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.1)';
+    li.innerHTML = `<strong>${c.name}</strong> · ${c.time}<br>${c.text}`;
+    ul.appendChild(li);
+  });
+}
+
+function addCmt() {
+  const name = document.getElementById('cmtName').value.trim();
+  const text = document.getElementById('cmtText').value.trim();
+  if (!name || !text) return;
+  const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+  arr.unshift({ name, text, time: new Date().toLocaleString('zh-CN') });
+  localStorage.setItem(LS_KEY, JSON.stringify(arr));
+  loadCmts();
+  document.getElementById('cmtForm').reset();
+}
+
+function exportCmt() {
+  const data = localStorage.getItem(LS_KEY) || '[]';
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'comments.json';
+  a.click();
+}
+
+/* 初始化 */
+loadCmts();
+</script>
+</body>
+</html>
