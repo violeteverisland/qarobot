@@ -56,67 +56,10 @@
     <li style="margin-bottom:10px">
       <strong>2025-08-08</strong>：规章制度机器人更新了出差和公出的数据库，能实现基本的功能，但仍需大量测试。优化界面样式，支持响应式布局。其他几个机器人的数据未清洗，效果欠佳
     </li>
-
-
   </ul>
   <p style="text-align:center;font-size:14px;color:#999">
     较大版本改动都会记录在这里
   </p>
 </section>
-
-<!-- ===== 简易评论区 ===== -->
-<section id="commentBox" style="margin:60px auto;max-width:600px">
-  <h2>留言板</h2>
-
-  <form id="cmtForm" onsubmit="return false">
-    <input  id="cmtName" placeholder="昵称" required style="width:30%;padding:6px">
-    <textarea id="cmtText" placeholder="说点什么…" required rows="3"
-              style="width:100%;margin-top:6px;padding:6px"></textarea>
-    <button onclick="addCmt()">提交</button>
-    <button onclick="exportCmt()">导出 JSON</button>
-  </form>
-
-  <ul id="cmtList" style="list-style:none;padding:0;margin-top:20px"></ul>
-</section>
-
-<script>
-/* ---------- 读写 localStorage ---------- */
-const LS_KEY = 'weiming_comments';
-
-function loadCmts() {
-  let arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-  const ul = document.getElementById('cmtList');
-  ul.innerHTML = '';
-  arr.forEach(c => {
-    const li = document.createElement('li');
-    li.style.cssText = 'background:#fff;padding:8px 12px;margin-bottom:8px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.1)';
-    li.innerHTML = `<strong>${c.name}</strong> · ${c.time}<br>${c.text}`;
-    ul.appendChild(li);
-  });
-}
-
-function addCmt() {
-  const name = document.getElementById('cmtName').value.trim();
-  const text = document.getElementById('cmtText').value.trim();
-  if (!name || !text) return;
-  const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-  arr.unshift({ name, text, time: new Date().toLocaleString('zh-CN') });
-  localStorage.setItem(LS_KEY, JSON.stringify(arr));
-  loadCmts();
-  document.getElementById('cmtForm').reset();
-}
-
-function exportCmt() {
-  const data = localStorage.getItem(LS_KEY) || '[]';
-  const blob = new Blob([data], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'comments.json';
-  a.click();
-}
-
-/* 初始化 */
-loadCmts();
-</script>
 </body>
 </html>
